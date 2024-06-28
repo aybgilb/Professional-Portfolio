@@ -1,31 +1,17 @@
 const mongoose = require('mongoose');
+const host = process.env.DB_HOST || '127.0.0.1';
+const dbURI = 'mongodb://${host}/travlr';
+const readLine = require('readline');
 
-// Connection string
-const dbURI = 'mongodb://127.0.0.1:27017/travlr';
+const connect = () => {
+  setTimeout(() => mongoose.connect(dbURI, {
+  }), 1000);
+}
 
-// Connect to MongoDB
-mongoose.connect(dbURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
-
-// Connection events
 mongoose.connection.on('connected', () => {
-  console.log(`Mongoose connected to ${dbURI}`);
+  console.log('Mongoose connected to ${dbURI}');
 });
 
 mongoose.connection.on('error', err => {
-  console.log(`Mongoose connection error: ${err}`);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('Mongoose disconnected');
-});
-
-// Close Mongoose connection when Node process ends
-process.on('SIGINT', () => {
-  mongoose.connection.close(() => {
-    console.log('Mongoose disconnected through app termination');
-    process.exit(0);
-  });
+  console.log('Mongoose connection error: ', err);
 });
